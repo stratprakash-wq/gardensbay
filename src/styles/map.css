@@ -1,0 +1,220 @@
+.map-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+.map-stage .react-transform-wrapper {
+  cursor: grab;
+}
+.map-content {
+  position: relative;
+  --inv: 1;
+  --pin-k: 1;
+  /* Minimum on-screen touch target (spec §8): 44px on mobile, 48px on kiosk. */
+  --hit: 44px;
+  --minor-k: 1;
+}
+.map-stage--kiosk .map-content {
+  --hit: 48px;
+}
+.map-stage--kiosk .map-content {
+  --pin-k: 1.05;
+}
+@media (max-width: 1500px) {
+  .map-stage--kiosk .map-content {
+    --pin-k: 0.88;
+  }
+}
+/* Event rooms & venues cluster tightly — reveal them once zoomed in (or when filtered/selected). */
+.map-content[data-zoom="far"]:not([data-filter="facilities"]) .cat-facility .pin:not(.is-selected) {
+  visibility: hidden;
+}
+/* Small amenity pins shrink a little on the overview to reduce clutter. */
+.map-content[data-zoom="far"] .pin--minor {
+  --minor-k: 0.82;
+  transform: scale(calc(var(--inv) * var(--pin-k) * 0.82));
+}
+.map-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.pins {
+  position: absolute;
+  inset: 0;
+}
+.pin-wrap {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.pin-wrap:has(.label-always),
+.pin-wrap:hover,
+.pin-wrap:focus-within {
+  z-index: 3;
+}
+.pin-wrap:has(.is-selected) {
+  z-index: 5;
+}
+.pin-wrap:has(.is-dim) {
+  z-index: 0;
+}
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  display: grid;
+  place-items: center;
+  transform: scale(calc(var(--inv) * var(--pin-k)));
+  transform-origin: center;
+  transition: opacity 0.3s var(--ease), filter 0.3s;
+}
+/* Invisible hit area so the touch target never drops below --hit, whatever the pin's drawn size. */
+.pin::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--hit) / (var(--pin-k) * var(--minor-k)));
+  height: calc(var(--hit) / (var(--pin-k) * var(--minor-k)));
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+/* Teardrop marker: a square with one sharp corner, rotated so the point faces down.
+   It sits over the official map's printed marker and hides it. */
+.pin__dot {
+  --ps: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--c);
+  color: var(--ink);
+  border: 3px solid #fff;
+  box-shadow: -2px 3px 10px rgba(20, 10, 30, 0.45);
+  transform: rotate(-45deg) scale(var(--ps));
+  transition: transform 0.35s var(--ease), box-shadow 0.35s;
+}
+.pin__icon {
+  display: grid;
+  place-items: center;
+  transform: rotate(45deg);
+}
+.pin--major.is-featured .pin__dot::after,
+.pin.is-selected .pin__dot::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50% 50% 50% 0;
+  border: 2.5px solid var(--c);
+  animation: ping 2.4s var(--ease) infinite;
+  pointer-events: none;
+}
+.pin--minor {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+}
+.pin--minor .pin__dot {
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+}
+.pin:hover .pin__dot,
+.pin:focus-visible .pin__dot {
+  --ps: 1.12;
+}
+.pin.is-selected .pin__dot {
+  --ps: 1.3;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.45), -3px 6px 18px rgba(20, 10, 30, 0.5);
+}
+.pin.is-dim {
+  opacity: 0.22;
+  filter: grayscale(0.7);
+  pointer-events: none;
+}
+.pin__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--bloom);
+  color: #fff;
+  border: 2px solid #fff;
+}
+.pin--minor .pin__badge {
+  top: -3px;
+  right: -3px;
+}
+.pin__label {
+  position: absolute;
+  left: calc(100% - 4px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #13221a;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(20, 10, 30, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.pin:hover .pin__label,
+.pin:focus-visible .pin__label,
+.pin.is-selected .pin__label,
+.pin.label-always .pin__label,
+.map-content[data-zoom="near"] .pin .pin__label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+.pin.is-dim .pin__label {
+  opacity: 0 !important;
+}
+.pin.is-selected .pin__label {
+  background: var(--canopy);
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Zoom controls */
+.map-controls {
+  position: absolute;
+  right: 16px;
+  display: grid;
+  gap: 8px;
+  z-index: 4;
+  transition: bottom 0.3s var(--ease);
+}
+.map-btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+}
+.map-btn:active {
+  transform: scale(0.94);
+}

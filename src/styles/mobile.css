@@ -1,0 +1,235 @@
+.mobile {
+  position: fixed;
+  inset: 0;
+  background: var(--plum);
+  color: var(--text);
+}
+.mobile .map-stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* Floating top bar */
+.mtop {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+.mtop > * {
+  pointer-events: auto;
+}
+.brand--pill {
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+  font-size: 1rem;
+  color: var(--text);
+}
+.brand--pill img {
+  border-radius: 50%;
+}
+.btn--tickets {
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--bloom-strong);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(184, 50, 95, 0.4);
+}
+
+/* Bottom sheet */
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: 26px 26px 0 0;
+  box-shadow: 0 -10px 40px rgba(20, 10, 30, 0.35);
+  overflow: hidden;
+}
+.sheet__grab {
+  flex: none;
+  padding: 0 14px 10px;
+  touch-action: none;
+}
+.sheet__handle {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 26px;
+}
+.sheet__handle span {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line);
+  box-shadow: inset 0 0 0 10px rgba(127, 127, 127, 0.25);
+}
+.sheet__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 14px calc(env(safe-area-inset-bottom, 0px) + 24px);
+  -webkit-overflow-scrolling: touch;
+}
+.msheet__head {
+  display: grid;
+  gap: 10px;
+}
+.tabs--mobile button {
+  min-height: 42px;
+  font-size: 0.95rem;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 6px 0 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  color: var(--text-3);
+}
+.search:focus-within {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px; /* prevents iOS zoom on focus */
+}
+.search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.chips--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin: 0 -14px;
+  padding: 2px 14px 4px;
+  scrollbar-width: none;
+}
+.chips--scroll::-webkit-scrollbar {
+  display: none;
+}
+.chips--scroll .chip {
+  min-height: 38px;
+  font-size: 0.85rem;
+}
+
+/* Results list */
+.results {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 8px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.result__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+.result__thumb {
+  flex: none;
+  width: 64px !important;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 3px var(--c);
+}
+.result__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.result__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+.result__tag {
+  font-size: 0.84rem;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.result__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.result__cat i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c);
+}
+.add {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--primary);
+  transition: background 0.2s, color 0.2s;
+}
+.add.is-on {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+.results__empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-3);
+}
+
+.detail--mobile .detail__body {
+  padding-top: 14px;
+}
+.detail--mobile .detail__name {
+  font-size: 1.75rem;
+}
+.detail--mobile .detail__actions .btn {
+  flex: 1 1 140px;
+}

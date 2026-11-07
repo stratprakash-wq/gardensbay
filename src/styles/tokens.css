@@ -1,0 +1,59 @@
+:root {
+  /* Palette */
+  --leaf: #1f5e3b;
+  --canopy: #0e3b2a;
+  --moss: #8db580;
+  --bloom: #e86a92;
+  /* Darker bloom for white text (≥ 4.5:1). */
+  --bloom-strong: #b8325f;
+  --sun: #f4b860;
+  --mist: #f5f7f2;
+  --ink: #13221a;
+  --plum: #542c68;
+
+  /* Semantic */
+  --bg: var(--mist);
+  --surface: #ffffff;
+  --surface-2: #edf2ea;
+  --glass: rgba(255, 255, 255, 0.82);
+  --text: var(--ink);
+  --text-2: #4a5b51;
+  --text-3: #6f7f75;
+  --line: rgba(19, 34, 26, 0.1);
+  --primary: var(--leaf);
+  --primary-ink: #ffffff;
+  --accent: var(--bloom);
+  --focus: #e86a92;
+
+  /* Type */
+  --font-display: "Fraunces", "Playfair Display", Georgia, serif;
+  --font-ui: "DM Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Shape & depth */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --shadow-sm: 0 1px 2px rgba(14, 59, 42, 0.08), 0 2px 8px rgba(14, 59, 42, 0.06);
+  --shadow-md: 0 6px 24px rgba(14, 59, 42, 0.12), 0 2px 6px rgba(14, 59, 42, 0.08);
+  --shadow-lg: 0 24px 60px rgba(14, 40, 30, 0.28);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Mobile follows the system colour scheme; the kiosk is always light. */
+@media (prefers-color-scheme: dark) {
+  .theme-auto {
+    --bg: #0d1712;
+    --surface: #15221b;
+    --surface-2: #1d2d24;
+    --glass: rgba(18, 30, 23, 0.86);
+    --text: #e8efe9;
+    --text-2: #b3c2b8;
+    --text-3: #8a9a90;
+    --line: rgba(232, 239, 233, 0.12);
+    --primary: #6fbf8a;
+    --primary-ink: #0b1a12;
+    --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.4);
+  }
+}
