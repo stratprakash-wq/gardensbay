@@ -113,6 +113,40 @@
   border-top-left-radius: var(--r-xl);
   margin-left: 10px;
 }
+.kiosk__panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kiosk__panel-head .tabs {
+  flex: 1;
+}
+.kiosk__panel[hidden] {
+  display: none;
+}
+.kiosk.is-panel-closed .kiosk__main {
+  grid-template-columns: minmax(0, 1fr);
+}
+.panel-reopen {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 20px 0 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--canopy);
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: var(--shadow-md);
+}
+.kiosk.is-attract .panel-reopen {
+  display: none;
+}
 .kiosk__scroll {
   flex: 1;
   min-height: 0;

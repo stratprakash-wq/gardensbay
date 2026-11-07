@@ -27,22 +27,32 @@ function lanAddress(): string | null {
 
 const LAN_IP = lanAddress();
 
-/** Print the address to open the kiosk at, so the QR is scannable from a phone. */
+/**
+ * Replace Vite's URL list with just two lines: the local URL, and the one
+ * Wi-Fi address phones can reach (the one the kiosk QR code uses).
+ * Link-local (169.254.x.x) and virtual-adapter addresses are left out.
+ */
 function phoneHint(): Plugin {
   return {
     name: "phone-hint",
     configureServer(server) {
-      server.httpServer?.once("listening", () => {
-        setTimeout(() => {
-          const addr = server.httpServer?.address();
-          const port = typeof addr === "object" && addr ? addr.port : server.config.server.port;
-          if (!LAN_IP) return;
-          console.log(
-            `\n  \x1b[32m📱 Kiosk for QR scanning:\x1b[0m  \x1b[36mhttp://${LAN_IP}:${port}/kiosk\x1b[0m` +
-              `\n     Phone must be on the same Wi-Fi. (Opening at localhost also works — the QR uses this address automatically.)\n`,
+      server.printUrls = () => {
+        const local = server.resolvedUrls?.local[0] ?? `http://localhost:${server.config.server.port}/`;
+        const port = new URL(local).port;
+        const g = (t: string) => `\x1b[32m${t}\x1b[0m`;
+        const c = (t: string) => `\x1b[36m${t}\x1b[0m`;
+        const lines = [`  ${g("➜")}  Local:    ${c(local)}`];
+        if (LAN_IP) {
+          lines.push(
+            `  ${g("➜")}  Network:  ${c(`http://${LAN_IP}:${port}/`)}  ${g("← use this one for the QR code")}`,
+            `  ${g("📱")} Kiosk:    ${c(`http://${LAN_IP}:${port}/kiosk`)}`,
+            `     Phones must be on the same Wi-Fi. Opening the kiosk at localhost also works — its QR uses ${LAN_IP} automatically.`,
           );
-        }, 50);
-      });
+        } else {
+          lines.push(`  ${g("➜")}  Network:  no Wi-Fi/LAN address found — phones won't be able to scan the QR code.`);
+        }
+        console.log(lines.join("\n") + "\n");
+      };
     },
   };
 }

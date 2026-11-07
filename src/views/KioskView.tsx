@@ -33,6 +33,7 @@ export default function KioskView() {
   const map = useRef<MapHandle>(null);
   const [tab, setTab] = useState<"explore" | "plan">("explore");
   const [attract, setAttract] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(true);
   const clock = useClock();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +59,7 @@ export default function KioskView() {
   const resetAll = useCallback(() => {
     v.reset();
     setTab("explore");
+    setPanelOpen(true);
     setAttract(true);
   }, [v]);
 
@@ -73,6 +75,7 @@ export default function KioskView() {
     (id: string) => {
       v.select(id);
       setTab("explore");
+      setPanelOpen(true);
       map.current?.focus(id);
     },
     [v],
@@ -95,7 +98,7 @@ export default function KioskView() {
   };
 
   return (
-    <div className={`kiosk ${attract ? "is-attract" : ""}`}>
+    <div className={`kiosk ${attract ? "is-attract" : ""} ${panelOpen ? "" : "is-panel-closed"}`}>
       <header className="kiosk__bar">
         <button className="brand" onClick={() => { v.select(null); setTab("explore"); map.current?.reset(); }} aria-label="Home">
           <img src="/icons/icon.svg" alt="" width={42} height={42} />
@@ -134,9 +137,17 @@ export default function KioskView() {
               </span>
             ))}
           </div>
+          {!panelOpen && (
+            <button className="panel-reopen" onClick={() => setPanelOpen(true)} aria-label="Open side panel">
+              <Icon name="left" size={20} />
+              {tab === "plan" ? "My plan" : "Explore"}
+              {v.plan.length > 0 && <span className="tab-badge">{v.plan.length}</span>}
+            </button>
+          )}
         </div>
 
-        <aside className="kiosk__panel">
+        <aside className="kiosk__panel" hidden={!panelOpen}>
+          <div className="kiosk__panel-head">
           <div className="tabs" role="tablist">
             <button role="tab" aria-selected={tab === "explore"} className={tab === "explore" ? "is-active" : ""} onClick={() => setTab("explore")}>
               Explore
@@ -151,6 +162,10 @@ export default function KioskView() {
                 )}
               </AnimatePresence>
             </button>
+          </div>
+          <button className="icon-btn panel-close" onClick={() => setPanelOpen(false)} aria-label="Close side panel">
+            <Icon name="x" />
+          </button>
           </div>
 
           <div className="kiosk__scroll" ref={scrollRef}>
