@@ -1,0 +1,17 @@
+{
+  "name": "Bloom Map · Gardens by the Bay",
+  "short_name": "Bloom Map",
+  "description": "Interactive illustrated map of Gardens by the Bay.",
+  "start_url": "/m",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F7F2",
+  "theme_color": "#0E3B2A",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
